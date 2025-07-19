@@ -9,16 +9,22 @@ export class DataLoaderService {
     private injector = inject(EnvironmentInjector)
     private reloadSubject = new ReplaySubject<void>(1);
     private errorHandlerSubject = new ReplaySubject<void>(1);
-    private globalPreReqs: () => Observable<boolean>[];
+    private globalPreReqs: Observable<boolean>[] = [];
 
-    constructor(globalPreReqs: () => Observable<boolean>[] = () => []) {
-        this.globalPreReqs = globalPreReqs;
+    constructor() {
     }
 
-    createDataLoader<T>(preReqs: Observable<boolean>[] = []): DataLoader<T> {
+    createDataLoader<T, P>(loader: (param: T) => T | undefined, preReqs: Observable<boolean>[] = []): DataLoader<T, P> {
         return runInInjectionContext(this.injector, () => {
-            let pr = this.globalPreReqs();
-            return new DataLoader<T>(this.injector, pr.concat(preReqs))
+            return new DataLoader<T, P>(this.injector, loader, this.globalPreReqs.concat(preReqs))
         })
+    }
+
+    addGlobalPreReq(preReq: Observable<boolean>) {
+        this.globalPreReqs.push(preReq);
+    }
+
+    removeGlobalPreReq(preReq: Observable<boolean>) {
+        this.globalPreReqs = this.globalPreReqs.filter(o => o !== preReq);
     }
 }

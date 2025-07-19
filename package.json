@@ -1,6 +1,6 @@
 {
-  "name": "aeontek-dataloader",
-  "version": "0.0.0",
+    "name": "@aeontronix/aeontek-data-loader-parent",
+    "version": "19.0.0-beta1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

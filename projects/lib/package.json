@@ -1,6 +1,6 @@
 {
-  "name": "lib",
-  "version": "0.0.1",
+    "name": "@aeontronix/aeontek-data-loader",
+    "version": "19.0.0-beta1",
   "peerDependencies": {
     "@angular/common": "^19.2.0",
     "@angular/core": "^19.2.0"
