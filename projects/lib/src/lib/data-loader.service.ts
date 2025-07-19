@@ -8,15 +8,16 @@ import {Observable, ReplaySubject} from 'rxjs';
 export class DataLoaderService {
     private injector = inject(EnvironmentInjector)
     private reloadSubject = new ReplaySubject<void>(1);
-    private errorHandlerSubject = new ReplaySubject<void>(1);
+    private errorSubject = new ReplaySubject<void>(1);
     private globalPreReqs: Observable<boolean>[] = [];
 
     constructor() {
     }
 
-    createDataLoader<T, P>(loader: (param: T) => T | undefined, preReqs: Observable<boolean>[] = []): DataLoader<T, P> {
+    createDataLoader<T, P>(loader: (param: P | undefined) => Observable<T> | T | undefined,
+                           loadImmediately = true, preReqs: Observable<boolean>[] = []): DataLoader<T, P> {
         return runInInjectionContext(this.injector, () => {
-            return new DataLoader<T, P>(this.injector, loader, this.globalPreReqs.concat(preReqs))
+            return new DataLoader<T, P>(this.injector, loadImmediately, loader, this.globalPreReqs.concat(preReqs))
         })
     }
 
